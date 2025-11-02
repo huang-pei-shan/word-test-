@@ -51,6 +51,58 @@ const wordList = [
   { chinese: "服務傳遞", english: "service delivery", note: "提供服務的過程" }
 ];
 
+// ✅ Fisher–Yates 洗牌
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+const container = document.getElementById("quiz-container");
+
+// ✅ 封裝成函式：可以重複呼叫來重新建立題目
+function renderQuiz() {
+  container.innerHTML = ""; // 清空原本的內容
+  shuffle(wordList); // 重新打亂
+  wordList.forEach((item, i) => {
+    const div = document.createElement("div");
+    div.className = "word-item";
+    div.innerHTML = `
+      <p><strong>${i + 1}. ${item.chinese}</strong></p>
+      <input type="text" id="ans-${i}" placeholder="輸入英文單字">
+      <p class="note">提示：${item.note}</p>
+    `;
+    container.appendChild(div);
+  });
+}
+
+// ✅ 頁面載入時先顯示題目
+renderQuiz();
+
+// 提交按鈕：檢查答案
+document.getElementById("submit").addEventListener("click", () => {
+  let correct = 0;
+  wordList.forEach((item, i) => {
+    const input = document.getElementById(`ans-${i}`);
+    if (input && input.value.trim().toLowerCase() === item.english.toLowerCase()) {
+      input.style.borderColor = "green";
+      correct++;
+    } else if (input) {
+      input.style.borderColor = "red";
+    }
+  });
+  document.getElementById("result").textContent =
+    `你答對了 ${correct} / ${wordList.length} 題`;
+});
+
+// ✅ 新增：重新洗牌按鈕
+document.getElementById("shuffle").addEventListener("click", () => {
+  document.getElementById("result").textContent = "";
+  renderQuiz(); // 重新渲染題目
+});
+
 const container = document.getElementById("quiz-container");
 
 // 產生題目介面
