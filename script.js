@@ -1,6 +1,6 @@
-// 範例資料（實際可放 50 個）
+// 題目資料（可自行擴充至 50 題）
 const wordList = [
-  { chinese: "顧客忠誠度", english: "customer loyalty", note: "顧客持續購買與支持的程度" },
+  {chinese: "顧客忠誠度", english: "customer loyalty", note: "顧客持續購買與支持的程度" },
   { chinese: "顧客關係管理", english: "customer relationship management", note: "維繫顧客關係的系統與策略" },
   { chinese: "品牌資產", english: "brand equity", note: "品牌所累積的價值" },
   { chinese: "數位行銷", english: "digital marketing", note: "使用網路平台推廣產品或服務" },
@@ -49,9 +49,10 @@ const wordList = [
   { chinese: "服務創新", english: "service innovation", note: "提供新型態服務" },
   { chinese: "顧客忠誠計畫", english: "customer loyalty program", note: "鼓勵顧客持續消費的活動" },
   { chinese: "服務傳遞", english: "service delivery", note: "提供服務的過程" }
+
 ];
 
-// ✅ Fisher–Yates 洗牌
+// === Fisher–Yates 洗牌演算法 ===
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -62,10 +63,10 @@ function shuffle(array) {
 
 const container = document.getElementById("quiz-container");
 
-// ✅ 封裝成函式：可以重複呼叫來重新建立題目
+// === 題目產生函式 ===
 function renderQuiz() {
-  container.innerHTML = ""; // 清空原本的內容
-  shuffle(wordList); // 重新打亂
+  container.innerHTML = ""; // 清空原本內容
+  shuffle(wordList); // 打亂題目
   wordList.forEach((item, i) => {
     const div = document.createElement("div");
     div.className = "word-item";
@@ -78,10 +79,10 @@ function renderQuiz() {
   });
 }
 
-// ✅ 頁面載入時先顯示題目
+// === 頁面載入時先顯示題目 ===
 renderQuiz();
 
-// 提交按鈕：檢查答案
+// === 提交答案按鈕 ===
 document.getElementById("submit").addEventListener("click", () => {
   let correct = 0;
   wordList.forEach((item, i) => {
@@ -97,38 +98,8 @@ document.getElementById("submit").addEventListener("click", () => {
     `你答對了 ${correct} / ${wordList.length} 題`;
 });
 
-// ✅ 新增：重新洗牌按鈕
+// === 重新洗牌按鈕 ===
 document.getElementById("shuffle").addEventListener("click", () => {
   document.getElementById("result").textContent = "";
-  renderQuiz(); // 重新渲染題目
-});
-
-const container = document.getElementById("quiz-container");
-
-// 產生題目介面
-wordList.forEach((item, i) => {
-  const div = document.createElement("div");
-  div.className = "word-item";
-  div.innerHTML = `
-    <p><strong>${i + 1}. ${item.chinese}</strong></p>
-    <input type="text" id="ans-${i}" placeholder="輸入英文單字">
-    <p class="note">提示：${item.note}</p>
-  `;
-  container.appendChild(div);
-});
-
-// 提交後檢查
-document.getElementById("submit").addEventListener("click", () => {
-  let correct = 0;
-  wordList.forEach((item, i) => {
-    const input = document.getElementById(`ans-${i}`);
-    if (input.value.trim().toLowerCase() === item.english.toLowerCase()) {
-      input.style.borderColor = "green";
-      correct++;
-    } else {
-      input.style.borderColor = "red";
-    }
-  });
-  document.getElementById("result").textContent = 
-    `你答對了 ${correct} / ${wordList.length} 題`;
+  renderQuiz(); // 重新顯示題目
 });
